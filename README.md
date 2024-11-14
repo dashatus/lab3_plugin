@@ -1,71 +1,104 @@
-# todo-manager README
+# todo-manager
 
-This is the README for your extension "todo-manager". After writing up a brief description, we recommend including the following sections.
+## Описание
+**todo-manager** - это расширение для Visual Studio Code, предназначенное для управления списком задач
+## Возможности
+- Добавление новых задач
+- Удаление задач
+- Переключение статуса задач
+- Фильтрация задач: все, выполненные, невыполненные
+- Простой веб-интерфейс для работы с задачами
+## Описание решения
+Расширение использует Webview для отображения интерфейса управления задачами. Пользователь взаимодействует с расширением через команды, которые позволяют создавать, обновлять и фильтровать задачи.
+## Функции
 
-## Features
+### `activate(context)`
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+ Функция вызывается при активации расширения. Она настраивает команды, которые можно использовать (подключает команды плагина к VSCode).
 
-For example if there is an image subfolder under your extension project workspace:
+### `addTaskCommand`
 
-\!\[feature X\]\(images/feature-x.png\)
+Команда для добавления новой задачи.
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+- **Как используется:** пользователь вводит текст задачи
+- **Результат:** добавляет новую задачу в массив и обновляет вид задач
 
-## Requirements
+### `filterTasksCommand`
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+Команда для фильтрации задач. Позволяет выбрать, какие задачи показывать: все, выполненные или невыполненные.
 
-## Extension Settings
+- **Как используется:** пользователь выбирает тип фильтрации
+- **Результат:** обновляет вид задач на основе выбранного фильтра
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+### `showTasksCommand`
 
-For example:
+Команда для отображения списка задач. Открывает панель с задачами, если она ещё не открыта, или обновляет её, если она уже открыта.
 
-This extension contributes the following settings:
+- **Как используется:** пользователь вызывает команду
+- **Результат:** открывает или обновляет панель с отображением задач
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+### `updateTasksView(filterOption)`
 
-## Known Issues
+Обновляет список задач в веб-панели, учитывая выбранный фильтр.
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+- **Входные данные:** строка, определяющая фильтр
+- **Как используется:** вызов функции при изменении фильтра
+- **Результат:** обновляет вид задач в зависимости от фильтра
+```
+updateTasksView('Выполненные'); // Обновляет вид для выполненных задач
+```
 
-## Release Notes
+### `filterTasks(option)`
 
-Users appreciate release notes as you update your extension.
+Фильтрует задачи на основе переданного параметра (выполненные, невыполненные или все).
 
-### 1.0.0
+- **Входные данные:** строка, определяющая фильтр
+- **Результат:** возвращает массив задач, которые соответствуют выбранному фильтру
+```
+const completedTasks = filterTasks('Выполненные');
+console.log(completedTasks); // Выводит задачи, которые выполнены
+```
+### `toggleTask(id)`
 
-Initial release of ...
+Переключает статус выполнения задачи по её ID (выполнена/не выполнена).
 
-### 1.0.1
+- **Как используется:** получает ID задачи
+- **Результат:** изменяет статус задачи и обновляет вид задач
+```
+toggleTask(1); // Переключает статус задачи с ID 1
+```
 
-Fixed issue #.
+### `deleteTask(id)`
 
-### 1.1.0
+Удаляет задачу по её ID.
 
-Added features X, Y, and Z.
+- **Как используется:** получает ID задачи
+- **Результат:** удаляет задачу из массива и обновляет вид задач
+```
+deleteTask(2); // Удаляет задачу с ID 2
+```
 
----
+### `getWebviewContent(tasks)`
 
-## Following extension guidelines
+Возвращает HTML-код для отображения задач в веб-интерфейсе.
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
+- **Входные данные:** массив задач, которые нужно отобразить
+- **Возвращаемое значение:** строка (HTML-код для панели).
+- **Результат:** возвращает построенный HTML для отображения задач
+```
+const htmlContent = getWebviewContent(tasks);
+console.log(htmlContent); // Выводит HTML-код для всех задач
+```
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+### `deactivate()`
 
-## Working with Markdown
+Функция для очистки ресурсов при деактивации расширения.
 
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
+- **Результат:** завершает работу расширения ( вызывается автоматически, когда расширение отключается)
+```
+deactivate();
+```
+## История изменений проекта
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+* 247c554 (HEAD -> master) out\extension.js fixed - исправленный extension.js
+* 77b29f4 (origin/master) added a working extension (written files: extension.js, package.json) - первый релиз плагина
